@@ -35,15 +35,16 @@ export const getUniversities = async (
   pageSize = 100,
   name?: string
 ): Promise<{ data: University[]; total: number }> => {
-  const cacheKey = `universities:all`;
+  const cacheKey = `universities:${page}:${pageSize}:${name}`;
 
   // If no name filter and first page, try cache
   if (!name) {
-    const cached = safeJsonParse<University[]>(await redis.get(cacheKey));
+    const cached = safeJsonParse<{
+      data: University[];
+      total: number;
+    }>(await redis.get(cacheKey));
     if (cached) {
-      const total = cached.length;
-      const data = cached.slice((page - 1) * pageSize, page * pageSize);
-      return { data, total };
+      return cached;
     }
   }
 
@@ -119,7 +120,10 @@ export const getUniversities = async (
 
   // Cache full list on first page when no filter
   if (page === 1 && !name) {
-    await redis.set(cacheKey, JSON.stringify(enriched), "EX", 60 * 60);
+    await redis.set(cacheKey, JSON.stringify({
+      data: enriched,
+      total,
+    }), "EX", 6 * 60 * 60); // Cache for 6 hours
   }
 
   return { data: enriched, total };
