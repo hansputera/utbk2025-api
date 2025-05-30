@@ -83,4 +83,7 @@ app.get("/stats", async (c) => {
   return c.json({ data: stats });
 });
 
-export default app;
+export default {
+  port: 9898,
+  fetch: app.fetch,
+}
