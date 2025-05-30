@@ -11,9 +11,10 @@ app.get("/", (c) => c.text("Hello World"));
 app.get("/universities", async (c) => {
   const page     = Number(c.req.query("page"))     || 1;
   const pageSize = Number(c.req.query("pageSize")) || 10;
+  const name = c.req.query("name");
 
   // Now returns { data, total }
-  const universities = await getUniversities(page, pageSize);
+  const universities = await getUniversities(page, pageSize, name);
 
   return c.json({
     data: universities.data,
