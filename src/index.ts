@@ -65,9 +65,10 @@ app.get("/universities/:ptnCode/programs/:programCode/passers", async (c) => {
 
   const page     = parseInt(c.req.query("page")     || "1", 10);
   const pageSize = parseInt(c.req.query("pageSize") || "10", 10);
+  const name = c.req.query("name");
 
   try {
-    const result = await getPassersPaginated(ptnCode, programCode, page, pageSize);
+    const result = await getPassersPaginated(ptnCode, programCode, page, pageSize, name);
     // result.meta should already include total & pages
     return c.json({
       data: result.data,
