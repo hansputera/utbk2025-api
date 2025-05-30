@@ -2,8 +2,13 @@ import { Hono } from "hono";
 import { getUniversities, getUniversity } from "./services/universities";
 import { getStats } from "./services/stats";
 import { getPassersPaginated, getPrograms } from "./services/program";
+import { cors } from "hono/cors";
+import { secureHeaders } from "hono/secure-headers";
 
 const app = new Hono();
+
+app.use(cors());
+app.use(secureHeaders());
 
 app.get("/", (c) => c.text("Hello World"));
 
