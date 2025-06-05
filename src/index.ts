@@ -4,6 +4,7 @@ import { getStats } from "./services/stats";
 import { getPassersPaginated, getPrograms } from "./services/program";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
+import { findStudent } from "./services/student";
 
 const app = new Hono();
 
@@ -88,6 +89,21 @@ app.get("/universities/:ptnCode/programs/:programCode/passers", async (c) => {
 app.get("/stats", async (c) => {
   const stats = await getStats();
   return c.json({ data: stats });
+});
+
+// Find Student
+app.get('/students', async (c) => {
+  const query = c.req.query('name');
+  if (!query?.length || query?.length < 3) {
+    return c.json({
+      message: 'Query length minimum is 3 chars',
+    }, 401);
+  }
+
+  const result = await findStudent(query);
+  return c.json({
+    data: result,
+  });
 });
 
 export default {

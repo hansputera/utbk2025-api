@@ -32,3 +32,11 @@ export type Passers = {
   program: string;
   id: string;
 }
+
+export type StudentQuery = {
+  name: string;
+  utbkNumber: string;
+  dob: string;
+  kip: boolean;
+  passed: boolean;
+}
