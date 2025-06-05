@@ -10,9 +10,14 @@ export const findStudent = async (query: string) => {
         return safeJsonParse(cache);
     }
 
-    const data = db.query(`
-        SELECT name, utbk_no as utbkNumber, date_of_birth as dob, passed, bidik_misi as kip, ptn FROM snbt_dump WHERE name LIKE ?
-    `).all(`%${query}%`);
+    const data = (db.query(`
+        SELECT name, utbk_no as utbkNumber, date_of_birth as dob, passed, bidik_misi as kip, ptn, prodi FROM snbt_dump WHERE name LIKE ?
+    `).all(`%${query}%`) as StudentQuery[])
+        .map(n => ({
+            ...n,
+            passed: Boolean(n.passed),
+            kip: Boolean(n.kip),
+        }));
 
     await redis.set(cacheKey, JSON.stringify(data), 'EX', 6 * 60 * 60);
 

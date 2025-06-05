@@ -38,5 +38,7 @@ export type StudentQuery = {
   utbkNumber: string;
   dob: string;
   kip: boolean;
+  ptn: string;
+  prodi: string;
   passed: boolean;
 }
